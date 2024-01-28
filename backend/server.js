@@ -29,16 +29,51 @@ app.post('/create', (req, res) => {
         req.body.email,
     ]
     db.query(sql, [values], (err, data) => {
+        if(err) return res.json(err);
+        return res.json("created");
+
+    //     if (err) {
+    //         console.error(err);
+    //         return res.status(500).json({ error: "Internal Server Error" });
+    //     }
+
+    //     return res.json({ message: "User created successfully" });
+    
+    })
+})
+
+app.put('/update/:id', (req, res) => {
+    const sql = "UPDATE users SET name = ?, phone = ?, email = ? WHERE id = ?";
+    const id = req.params.id;
+    const values = [
+        req.body.name,
+        req.body.phone,
+        req.body.email,
+    ]
+    db.query(sql, [...values, id], (err, data) => {
         // if(err) return res.json(err);
-        // return res.json("created");
-        if (err) {
+        // return res.json("updated");
+
+            if (err) {
             console.error(err);
             return res.status(500).json({ error: "Internal Server Error" });
         }
 
-        return res.json({ message: "User created successfully" });
+        return res.json({ message: "User updated successfully" });
+    
     })
 })
+
+app.delete('/delete/:id', (req, res) => {
+    const sql = "DELETE FROM users WHERE id = ?";
+    const id = req.params.id;
+
+    db.query(sql, [id], (err, data) => {
+        if(err) return res.json(err);
+        return res.json("deleted");
+    })
+})
+
 
 app.listen(8081, ()=> {
     console.log("listening...");
